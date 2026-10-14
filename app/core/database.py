@@ -4,12 +4,12 @@ import os
 from dotenv import load_dotenv
 
 
-load_dotenv()
+load_dotenv(override=False)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    raise ValueError("DATABASE_URL not found in .env file")
+    raise ValueError("DATABASE_URL not found in environment variables")
 
 
 engine = create_engine(

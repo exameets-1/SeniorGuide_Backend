@@ -1,0 +1,41 @@
+databases:
+  - name: exameet_db
+    plan: free
+    postgresVersion: 15
+
+services:
+  - type: web
+    name: senior-guide-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          databaseName: exameet_db
+      - key: ADMIN_EMAIL
+        value: cyberarktechnologies245@gmail.com
+      - key: ADMIN_PASSWORD
+        value: subhash1234
+      - key: AGORA_APP_ID
+        value: 634327ee9ecb40908245ed0d668626b3
+      - key: AGORA_APP_CERTIFICATE
+        value: ba161d948feb4e6096dbd0e1caff1091
+      - key: ALGORITHM
+        value: HS256
+      - key: SECRET_KEY
+        value: edu_tech_platform_secure_jwt_secret_key_2026_project
+      - key: RAZORPAY_KEY_ID
+        value: rzp_live_SbddPWLYEu6YH7
+      - key: RAZORPAY_KEY_SECRET
+        value: mD8o8BVQ9OT49BfYA1U7bVR7
+      - key: EMAIL_USER
+        value: cyberarktechnologies245@gmail.com
+      - key: SMTP_SERVER
+        value: smtp-relay.brevo.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: YOUR_RAZORPAYX_ACCOUNT_NUMBER
+        value: pay_SeBAhzvV9ZF6S9
+    plan: free
+    region: oregon

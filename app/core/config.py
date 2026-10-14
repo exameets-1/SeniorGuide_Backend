@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
 
-# Load .env file
-load_dotenv()
+# Load .env file (but allow production env vars to override)
+load_dotenv(override=False)
 
 # Email credentials
 SMTP_SERVER = os.getenv("SMTP_SERVER")

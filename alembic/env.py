@@ -25,8 +25,8 @@ from dotenv import load_dotenv
 
 from app.core.database import Base
 
-# load .env
-load_dotenv()
+# load .env (but allow production env vars to override)
+load_dotenv(override=False)
 
 config = context.config
 
