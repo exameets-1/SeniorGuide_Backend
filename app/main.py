@@ -40,7 +40,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
     "http://localhost:5173",
-    "https://seniorguide.exameets.com"
+    "https://seniroguide.exameets.in"
 ]
 
 app.add_middleware(
@@ -54,6 +54,14 @@ app.add_middleware(
 
 @app.on_event("startup")
 def create_superadmin():
+    if engine is None:
+        print("Skipping superadmin creation - database not configured")
+        return
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        print(f"Warning: Could not create tables: {e}")
+
     db = SessionLocal()
     existing = db.query(AdminRole).filter(AdminRole.email == ADMIN_EMAIL).first()
     if not existing:
@@ -90,9 +98,6 @@ load_dotenv()
 def startup_event():
     start_scheduler()
 
-
-
-Base.metadata.create_all(bind=engine)
 
 app.include_router(auth_router)
 app.include_router(guide_router)
