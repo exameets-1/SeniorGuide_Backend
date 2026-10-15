@@ -8,28 +8,31 @@ load_dotenv(override=False)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+# Don't fail at import time - allow Render to provision database first
 if not DATABASE_URL:
-    raise ValueError("DATABASE_URL not found in environment variables")
+    import warnings
+    warnings.warn("DATABASE_URL not set - database operations will fail")
+    engine = None
+    SessionLocal = None
+    Base = declarative_base()
+else:
+    engine = create_engine(
+        DATABASE_URL,
+        echo=True  
+    )
 
+    SessionLocal = sessionmaker(
+        autocommit=False,
+        autoflush=False,
+        bind=engine
+    )
 
-engine = create_engine(
-    DATABASE_URL,
-    echo=True  
-)
-
-
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
-
-
-Base = declarative_base()
-
+    Base = declarative_base()
 
 
 def get_db():
+    if SessionLocal is None:
+        raise RuntimeError("Database not configured - set DATABASE_URL")
     db = SessionLocal()
     try:
         yield db
